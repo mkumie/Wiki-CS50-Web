@@ -68,4 +68,36 @@ def edit(request, title):
 
 
 def search(request):
-    pass
+
+    entries = util.list_entries()
+
+    for indx in range(len(entries)):
+
+        entries[indx] = entries[indx].upper()
+
+
+
+    if request.method == 'GET':
+
+        search_item = request.GET.get('q', None).upper()
+
+        # Check if search item matches exactly as an entry
+        if search_item in entries:
+
+            return display(request, search_item)
+
+        # Check if a substring of an entry matches return even empty
+        else:
+
+            entry_list = []
+
+            for entry in entries:
+                if search_item in entry:
+                    entry_list.append(entry.capitalize())
+            
+            return render(request, 'encyclopedia/search_result.html', {
+                'entries': entry_list,
+            })
+
+    # All other scenario redirect to the index page
+    return index(request)
