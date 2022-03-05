@@ -1,5 +1,4 @@
-from django.http import HttpResponseRedirect
-from django.utils.html import strip_tags
+from random import randint
 from django.shortcuts import render
 from django import forms
 
@@ -101,3 +100,17 @@ def search(request):
 
     # All other scenario redirect to the index page
     return index(request)
+
+
+def random(request):
+
+    entries = util.list_entries()
+    total_entry = len(entries)
+
+    # Generate a random number between 0 and total number of entry less one
+    rand = randint(0, total_entry - 1)
+    title = entries[rand]
+
+    return render(request, "encyclopedia/display.html", {
+        "entry":util.get_entry(title)
+    })
